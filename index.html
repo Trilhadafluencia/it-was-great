@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trilha da Fluência: Past of Verb To Be</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Playfair Display e Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Configuração da Paleta de Cores -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            darkblue: '#0a2742',
+                            lightblue: '#a8c4dc',
+                            offwhite: '#f8fafc', /* Tom limpo e neutro que favorece a leitura prolongada */
+                            terracotta: '#a61e00',
+                            champagne: '#b88a4d',
+                            champagnelight: '#e2b07e'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Estilos base para inputs */
+        .fill-blank, .fill-line {
+            border: none;
+            border-bottom: 2px solid #a8c4dc;
+            background: transparent;
+            color: #0a2742;
+            transition: border-color 0.3s ease, color 0.3s ease;
+        }
+        .fill-blank {
+            font-weight: 600;
+            text-align: center;
+            padding: 0 0.5rem;
+            width: 100px;
+        }
+        .fill-line {
+            font-weight: 500;
+            padding: 0 0.5rem;
+            width: 100%;
+            max-width: 300px;
+        }
+        .fill-blank:focus, .fill-line:focus {
+            outline: none;
+            border-bottom-color: #b88a4d;
+        }
+
+        /* Classes de feedback (Correção Automática) */
+        .correct-answer {
+            border-bottom-color: #16a34a !important; /* Verde Sucesso */
+            color: #16a34a !important;
+        }
+        .incorrect-answer {
+            border-bottom-color: #a61e00 !important; /* Terracota da sua marca */
+            color: #a61e00 !important;
+        }
+
+        /* Estilo para o Modo de Edição */
+        [contenteditable="true"] {
+            outline: 2px dashed #a8c4dc;
+            outline-offset: 4px;
+            border-radius: 4px;
+            transition: outline 0.2s;
+        }
+        [contenteditable="true"]:focus {
+            outline: 2px solid #b88a4d;
+            background-color: rgba(255, 251, 246, 0.8);
+        }
+    </style>
+</head>
+<body class="bg-brand-offwhite text-brand-darkblue font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- Cabeçalho (Reduzido em altura e tamanho de fonte) -->
+    <header class="bg-brand-darkblue text-white py-6 px-6 border-b-4 border-brand-champagne relative overflow-hidden">
+        <div class="max-w-4xl mx-auto relative z-10 text-center">
+            <span class="text-brand-champagnelight tracking-widest text-xs uppercase font-semibold mb-1 block">Premium Grammar Module</span>
+            <h1 class="font-serif text-3xl md:text-4xl font-bold mb-2">
+                Past of Verb To Be
+            </h1>
+            <p class="text-brand-lightblue text-sm md:text-base max-w-2xl mx-auto font-light italic">
+                Domine a base da comunicação no passado com precisão e elegância.
+            </p>
+        </div>
+        <div class="absolute top-0 left-0 w-full h-full opacity-5 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-brand-champagnelight via-transparent to-transparent pointer-events-none"></div>
+    </header>
+
+    <!-- Navegação (Abas) -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 flex overflow-x-auto hide-scrollbar">
+            <button onclick="openTab('home')" id="btn-home" class="tab-btn whitespace-nowrap py-4 px-6 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-brand-darkblue hover:border-brand-lightblue transition-colors flex items-center gap-2">
+                🏠 Início
+            </button>
+            <button onclick="openTab('grammar')" id="btn-grammar" class="tab-btn whitespace-nowrap py-4 px-6 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-brand-darkblue hover:border-brand-lightblue transition-colors flex items-center gap-2">
+                🧠 Grammar
+            </button>
+            <button onclick="openTab('practice')" id="btn-practice" class="tab-btn whitespace-nowrap py-4 px-6 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-brand-darkblue hover:border-brand-lightblue transition-colors flex items-center gap-2">
+                ✏️ Practice
+            </button>
+            <button onclick="openTab('reading')" id="btn-reading" class="tab-btn whitespace-nowrap py-4 px-6 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-brand-darkblue hover:border-brand-lightblue transition-colors flex items-center gap-2">
+                📖 Reading
+            </button>
+            <button onclick="openTab('listening')" id="btn-listening" class="tab-btn whitespace-nowrap py-4 px-6 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-brand-darkblue hover:border-brand-lightblue transition-colors flex items-center gap-2">
+                🎧 Listening
+            </button>
+            <button onclick="openTab('speaking')" id="btn-speaking" class="tab-btn whitespace-nowrap py-4 px-6 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-brand-darkblue hover:border-brand-lightblue transition-colors flex items-center gap-2">
+                🗣️ Speaking
+            </button>
+            <!-- Nova Aba de Envio -->
+            <button onclick="openTab('submit')" id="btn-submit" class="tab-btn whitespace-nowrap py-4 px-6 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-brand-darkblue hover:border-brand-lightblue transition-colors flex items-center gap-2">
+                📤 Envio
+            </button>
+        </div>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <main class="flex-grow max-w-4xl mx-auto w-full px-4 sm:px-6 py-8 md:py-12">
+        
+        <!-- ABA: Início -->
+        <section id="home" class="tab-content active">
+            <div class="bg-white rounded-xl shadow-lg p-8 border-t-4 border-brand-darkblue">
+                <h2 class="font-serif text-3xl text-brand-darkblue mb-6">Welcome to your Grammar Module.</h2>
+                <div class="prose max-w-none text-gray-700 space-y-4">
+                    <p class="text-lg">
+                        Neste módulo, vamos estruturar uma das bases mais importantes do inglês: o passado do verbo <strong>To Be</strong> (<em>Was / Were</em>).
+                    </p>
+                    <ul class="space-y-3 mt-8">
+                        <li class="flex items-start">
+                            <span class="text-brand-terracotta mr-2">📍</span>
+                            <span><strong>Grammar:</strong> Regras claras e exemplos corporativos/pessoais.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-brand-terracotta mr-2">📍</span>
+                            <span><strong>Practice:</strong> Exercícios interativos com correção automática.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-brand-terracotta mr-2">📍</span>
+                            <span><strong>Reading:</strong> Imersão com textos do quotidiano para expandir vocabulário.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-brand-terracotta mr-2">📍</span>
+                            <span><strong>Listening:</strong> Exercícios de áudio para afinar a compreensão.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-brand-terracotta mr-2">📍</span>
+                            <span><strong>Speaking:</strong> Perguntas estratégicas para praticar em voz alta.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-brand-terracotta mr-2">📍</span>
+                            <span><strong>Envio:</strong> Aba dedicada para submeter todas as suas respostas diretamente para a mentora.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="mt-10 text-center">
+                    <button onclick="openTab('grammar')" class="bg-brand-darkblue text-white px-8 py-3 rounded-full hover:bg-brand-champagne transition-colors shadow-md font-medium">
+                        Começar o Estudo ➔
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABA: Grammar -->
+        <section id="grammar" class="tab-content">
+            <div class="space-y-8">
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <h2 class="font-serif text-3xl text-brand-darkblue mb-4 flex items-center gap-3">
+                        <span class="text-brand-champagne">🎯</span> Uso Geral
+                    </h2>
+                    <p class="text-gray-600 mb-6">Use o verbo <strong>to be no passado</strong> para falar sobre situações que aconteceram no passado, como:</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div class="bg-brand-offwhite p-4 rounded-lg border border-brand-lightblue/50">
+                            <h4 class="font-semibold text-brand-darkblue mb-2">Estados e Sentimentos</h4>
+                            <p class="text-sm italic text-gray-700">"I was tired yesterday." <span class="block text-xs text-gray-500 mt-1">(Eu estava cansada ontem.)</span></p>
+                        </div>
+                        <div class="bg-brand-offwhite p-4 rounded-lg border border-brand-lightblue/50">
+                            <h4 class="font-semibold text-brand-darkblue mb-2">Localização</h4>
+                            <p class="text-sm italic text-gray-700">"She was at school." <span class="block text-xs text-gray-500 mt-1">(Ela estava na escola.)</span></p>
+                        </div>
+                        <div class="bg-brand-offwhite p-4 rounded-lg border border-brand-lightblue/50">
+                            <h4 class="font-semibold text-brand-darkblue mb-2">Idade no Passado</h4>
+                            <p class="text-sm italic text-gray-700">"I was 25 when I opened my company." <span class="block text-xs text-gray-500 mt-1">(Eu tinha 25 anos quando abri a minha empresa.)</span></p>
+                        </div>
+                        <div class="bg-brand-offwhite p-4 rounded-lg border border-brand-lightblue/50">
+                            <h4 class="font-semibold text-brand-darkblue mb-2">Características/Situações</h4>
+                            <p class="text-sm italic text-gray-700">"They were happy at the party." <span class="block text-xs text-gray-500 mt-1">(Eles estavam felizes na festa.)</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 class="font-serif text-3xl text-brand-darkblue mb-4 flex items-center gap-3">
+                    <span class="text-brand-champagne">🧩</span> Formas (Estrutura)
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white rounded-xl shadow-lg p-6 border-t-4 border-green-600">
+                        <h3 class="font-serif text-xl text-brand-darkblue mb-4 flex items-center gap-2">✅ Affirmative</h3>
+                        <div class="bg-gray-50 p-3 rounded text-sm text-center mb-4 font-mono">Sujeito + was / were</div>
+                        <ul class="text-sm space-y-2 mb-4">
+                            <li><span class="font-bold">I / He / She / It</span> ➔ WAS</li>
+                            <li><span class="font-bold">You / We / They</span> ➔ WERE</li>
+                        </ul>
+                        <div class="space-y-2 text-sm italic text-gray-700">
+                            <p>• I was at home.</p>
+                            <p>• She was my teacher.</p>
+                            <p>• We were friends.</p>
+                            <p>• They were tired.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-lg p-6 border-t-4 border-brand-terracotta">
+                        <h3 class="font-serif text-xl text-brand-darkblue mb-4 flex items-center gap-2">❌ Negative</h3>
+                        <div class="bg-gray-50 p-3 rounded text-sm text-center mb-4 font-mono">Sujeito + was not / were not</div>
+                        <ul class="text-sm space-y-2 mb-4">
+                            <li><span class="font-bold">was not</span> ➔ wasn't</li>
+                            <li><span class="font-bold">were not</span> ➔ weren't</li>
+                        </ul>
+                        <div class="space-y-2 text-sm italic text-gray-700">
+                            <p>• I wasn't tired.</p>
+                            <p>• He wasn't at school.</p>
+                            <p>• We weren't ready.</p>
+                            <p>• They weren't happy.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-lg p-6 border-t-4 border-brand-champagne">
+                        <h3 class="font-serif text-xl text-brand-darkblue mb-4 flex items-center gap-2">❓ Interrogative</h3>
+                        <div class="bg-gray-50 p-3 rounded text-sm text-center mb-4 font-mono">Was / Were + Sujeito</div>
+                        <p class="text-sm mb-4 text-gray-500">Inverta a ordem para fazer perguntas.</p>
+                        <div class="space-y-2 text-sm italic text-gray-700">
+                            <p>• Was she at home?</p>
+                            <p>• Were you busy yesterday?</p>
+                            <p>• Was it difficult?</p>
+                            <p>• Were they friends?</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABA: Practice -->
+        <section id="practice" class="tab-content">
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden" id="practice-container">
+                <div class="p-8 border-b bg-brand-darkblue text-brand-offwhite">
+                    <h2 class="font-serif text-3xl mb-2 flex items-center gap-3">
+                        <span class="text-brand-champagnelight">✏️</span> Grammar Practice
+                    </h2>
+                    <p class="text-brand-lightblue font-light">Preencha os campos abaixo. Ao terminar, clique em "Verificar Respostas".</p>
+                </div>
+
+                <div class="p-8 space-y-10 text-gray-800">
+                    
+                    <!-- Ex 1 -->
+                    <div>
+                        <h3 class="font-bold text-lg text-brand-terracotta mb-4">Exercise 1 — Complete with <span class="uppercase">WAS</span> or <span class="uppercase">WERE</span></h3>
+                        <ol class="list-decimal list-inside space-y-4 pl-2">
+                            <li>I <input type="text" name="Practice_Ex1_1" class="fill-blank user-input" autocomplete="off" data-answer="was"> at the park yesterday.</li>
+                            <li>She <input type="text" name="Practice_Ex1_2" class="fill-blank user-input" autocomplete="off" data-answer="was"> very happy last night.</li>
+                            <li>They <input type="text" name="Practice_Ex1_3" class="fill-blank user-input" autocomplete="off" data-answer="were"> at school in the morning.</li>
+                            <li>We <input type="text" name="Practice_Ex1_4" class="fill-blank user-input" autocomplete="off" data-answer="were"> tired after the trip.</li>
+                            <li>It <input type="text" name="Practice_Ex1_5" class="fill-blank user-input" autocomplete="off" data-answer="was"> very cold yesterday.</li>
+                        </ol>
+                    </div>
+
+                    <hr class="border-gray-200">
+
+                    <!-- Ex 2 -->
+                    <div>
+                        <h3 class="font-bold text-lg text-brand-terracotta mb-4">Exercise 2 — Complete with <span class="uppercase">WASN'T</span> or <span class="uppercase">WEREN'T</span></h3>
+                        <ol class="list-decimal list-inside space-y-4 pl-2">
+                            <li>I <input type="text" name="Practice_Ex2_1" class="fill-blank user-input" autocomplete="off" data-answer="wasn't|was not|wasnt"> at home last night.</li>
+                            <li>They <input type="text" name="Practice_Ex2_2" class="fill-blank user-input" autocomplete="off" data-answer="weren't|were not|werent"> ready for the test.</li>
+                            <li>She <input type="text" name="Practice_Ex2_3" class="fill-blank user-input" autocomplete="off" data-answer="wasn't|was not|wasnt"> my friend before.</li>
+                            <li>We <input type="text" name="Practice_Ex2_4" class="fill-blank user-input" autocomplete="off" data-answer="weren't|were not|werent"> late for class.</li>
+                            <li>He <input type="text" name="Practice_Ex2_5" class="fill-blank user-input" autocomplete="off" data-answer="wasn't|was not|wasnt"> sad yesterday.</li>
+                        </ol>
+                    </div>
+
+                    <hr class="border-gray-200">
+
+                    <!-- Ex 3 -->
+                    <div>
+                        <h3 class="font-bold text-lg text-brand-terracotta mb-4">Exercise 3 — Put the words in order</h3>
+                        <ol class="list-decimal list-inside space-y-4 pl-2">
+                            <li class="flex flex-col sm:flex-row sm:items-center gap-2">
+                                <span class="text-gray-500 italic text-sm w-48">was / she / happy</span> 
+                                <span class="hidden sm:inline">➔</span>
+                                <input type="text" name="Practice_Ex3_1" class="fill-line flex-grow user-input" autocomplete="off" data-answer="she was happy">
+                            </li>
+                            <li class="flex flex-col sm:flex-row sm:items-center gap-2">
+                                <span class="text-gray-500 italic text-sm w-48">were / they / at school</span> 
+                                <span class="hidden sm:inline">➔</span>
+                                <input type="text" name="Practice_Ex3_2" class="fill-line flex-grow user-input" autocomplete="off" data-answer="they were at school">
+                            </li>
+                            <li class="flex flex-col sm:flex-row sm:items-center gap-2">
+                                <span class="text-gray-500 italic text-sm w-48">tired / was / he / very</span> 
+                                <span class="hidden sm:inline">➔</span>
+                                <input type="text" name="Practice_Ex3_3" class="fill-line flex-grow user-input" autocomplete="off" data-answer="he was very tired">
+                            </li>
+                            <li class="flex flex-col sm:flex-row sm:items-center gap-2">
+                                <span class="text-gray-500 italic text-sm w-48">the movie / was / interesting</span> 
+                                <span class="hidden sm:inline">➔</span>
+                                <input type="text" name="Practice_Ex3_4" class="fill-line flex-grow user-input" autocomplete="off" data-answer="the movie was interesting">
+                            </li>
+                            <li class="flex flex-col sm:flex-row sm:items-center gap-2">
+                                <span class="text-gray-500 italic text-sm w-48">you / were / where</span> 
+                                <span class="hidden sm:inline">➔</span>
+                                <input type="text" name="Practice_Ex3_5" class="fill-line flex-grow user-input" autocomplete="off" data-answer="where were you">
+                            </li>
+                        </ol>
+                    </div>
+
+                    <hr class="border-gray-200">
+
+                    <!-- Ex 4 & 5 -->
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="font-bold text-lg text-brand-terracotta mb-4">Exercise 4 — Turn into Negative</h3>
+                            <ul class="space-y-4">
+                                <li>She was tired.<br><input type="text" name="Practice_Ex4_1" class="fill-line user-input" placeholder="She wasn't..." data-answer="she wasn't tired|she was not tired|she wasnt tired"></li>
+                                <li>They were at home.<br><input type="text" name="Practice_Ex4_2" class="fill-line user-input" data-answer="they weren't at home|they were not at home|they werent at home"></li>
+                                <li>He was happy.<br><input type="text" name="Practice_Ex4_3" class="fill-line user-input" data-answer="he wasn't happy|he was not happy|he wasnt happy"></li>
+                                <li>We were friends.<br><input type="text" name="Practice_Ex4_4" class="fill-line user-input" data-answer="we weren't friends|we were not friends|we werent friends"></li>
+                                <li>It was easy.<br><input type="text" name="Practice_Ex4_5" class="fill-line user-input" data-answer="it wasn't easy|it was not easy|it wasnt easy"></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg text-brand-terracotta mb-4">Exercise 5 — Turn into Questions</h3>
+                            <ul class="space-y-4">
+                                <li>She was at school.<br><input type="text" name="Practice_Ex5_1" class="fill-line user-input" placeholder="Was she..." data-answer="was she at school"></li>
+                                <li>They were busy.<br><input type="text" name="Practice_Ex5_2" class="fill-line user-input" data-answer="were they busy"></li>
+                                <li>He was angry.<br><input type="text" name="Practice_Ex5_3" class="fill-line user-input" data-answer="was he angry"></li>
+                                <li>We were late.<br><input type="text" name="Practice_Ex5_4" class="fill-line user-input" data-answer="were we late"></li>
+                                <li>It was cold.<br><input type="text" name="Practice_Ex5_5" class="fill-line user-input" data-answer="was it cold"></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Botão de Correção -->
+                    <div class="mt-8 pt-6 border-t border-gray-100 flex flex-col items-center">
+                        <button onclick="checkAnswers('practice-container')" class="bg-brand-darkblue text-white px-8 py-3 rounded-full hover:bg-brand-champagne transition-colors shadow-md font-medium text-lg flex items-center gap-2">
+                            ✓ Verificar Minhas Respostas
+                        </button>
+                        <p class="text-sm text-gray-500 mt-3 italic hidden" id="practice-msg">Respostas validadas! As corretas estão a <span class="text-green-600 font-bold">verde</span>, e as incorretas a <span class="text-brand-terracotta font-bold">terracota</span>.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABA: Reading -->
+        <section id="reading" class="tab-content">
+            <div class="space-y-8">
+                <div class="bg-white rounded-xl shadow-lg p-8" id="reading-container">
+                    <h2 class="font-serif text-3xl text-brand-darkblue mb-6 flex items-center gap-3">
+                        <span class="text-brand-champagne">📖</span> Reading: A Busy Weekend
+                    </h2>
+                    
+                    <div class="bg-brand-offwhite p-6 rounded-lg border-l-4 border-brand-lightblue text-gray-800 leading-relaxed font-serif mb-8">
+                        <p class="mb-4">Last weekend, Julia was very busy. On Saturday morning, she was at the gym with her sister. They were very excited because it was their first fitness class. After that, Julia was at a restaurant with her family. The food was delicious, and everyone was happy.</p>
+                        <p class="mb-4">In the afternoon, Julia and her cousins were at the shopping mall. The stores were crowded, but it was fun. At night, Julia was very tired, so she was at home. Her parents were tired too, and they were ready to sleep early.</p>
+                        <p>On Sunday, Julia was sick, so she wasn’t at the park with her friends. She was in bed all day. The weekend wasn’t perfect, but it was still special.</p>
+                    </div>
+
+                    <h3 class="font-bold text-lg text-brand-terracotta mb-4">Answer the questions:</h3>
+                    <ol class="list-decimal list-inside space-y-4 text-gray-700">
+                        <li>Where was Julia on Saturday morning? <input type="text" name="Reading_Q1" class="fill-line ml-2 user-input" data-answer="at the gym|she was at the gym|gym"></li>
+                        <li>Who was with her? <input type="text" name="Reading_Q2" class="fill-line ml-2 user-input" data-answer="her sister|with her sister|she was with her sister"></li>
+                        <li>How was the food? <input type="text" name="Reading_Q3" class="fill-line ml-2 user-input" data-answer="delicious|it was delicious|the food was delicious"></li>
+                        <li>Were the stores empty? <input type="text" name="Reading_Q4" class="fill-line ml-2 user-input" data-answer="no|no they weren't|no they were not|no, they weren't|they were crowded"></li>
+                        <li>Why was Julia at home at night? <input type="text" name="Reading_Q5" class="fill-line ml-2 user-input" data-answer="she was very tired|because she was very tired|she was tired|because she was tired"></li>
+                        <li>Was Julia at the park on Sunday? <input type="text" name="Reading_Q6" class="fill-line ml-2 user-input" data-answer="no|no she wasn't|no, she wasn't|no she was not"></li>
+                        <li>Where was she on Sunday? <input type="text" name="Reading_Q7" class="fill-line ml-2 user-input" data-answer="in bed|she was in bed|at home"></li>
+                        <li>Was the weekend perfect? <input type="text" name="Reading_Q8" class="fill-line ml-2 user-input" data-answer="no|no it wasn't|no, it wasn't|no it was not|no, but it was still special"></li>
+                    </ol>
+
+                    <button onclick="checkAnswers('reading-container')" class="mt-6 bg-brand-darkblue text-white px-6 py-2 rounded-full hover:bg-brand-champagne transition-colors shadow-sm font-medium text-sm">
+                        ✓ Verificar Leitura
+                    </button>
+                    
+                    <p class="text-xs text-gray-500 mt-3 italic">Nota: Questões de texto podem ter várias formas corretas. Caso a sua resposta fique vermelha, mas ache que tem o mesmo sentido, verifique com a mentora.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABA: Listening -->
+        <section id="listening" class="tab-content">
+            <div class="space-y-8">
+                <div class="bg-white rounded-xl shadow-lg p-8 border-t-4 border-brand-darkblue" id="listening-container">
+                    <h2 class="font-serif text-3xl text-brand-darkblue mb-6 flex items-center gap-3">
+                        <span class="text-brand-champagne">🎧</span> Listening Comprehension
+                    </h2>
+                    <p class="text-gray-600 mb-6">Ouça o áudio abaixo e responda às questões.</p>
+
+                    <!-- Player de Áudio Premium -->
+                    <div class="bg-brand-offwhite p-6 rounded-lg border border-brand-champagne mb-8 shadow-inner flex flex-col items-center">
+                        <p class="font-serif text-brand-darkblue font-semibold mb-4 flex items-center gap-2">
+                            <span class="text-brand-terracotta">▶️</span> A Busy Weekend at the Beach
+                        </p>
+                        
+                        <div class="flex gap-4">
+                            <button onclick="playAudioText()" id="playAudioBtn" class="bg-brand-darkblue text-white px-6 py-3 rounded-full hover:bg-brand-champagne transition-colors shadow-md font-medium flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" fill-rule="evenodd"></path></svg>
+                                Ouvir Áudio
+                            </button>
+                            <button onclick="stopAudioText()" id="stopAudioBtn" class="bg-brand-terracotta text-white px-6 py-3 rounded-full hover:bg-red-800 transition-colors shadow-md font-medium flex items-center gap-2 hidden">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z" clip-rule="evenodd"></path></svg>
+                                Parar
+                            </button>
+                        </div>
+
+                        <p class="text-xs text-gray-500 mt-4 italic text-center transition-colors" id="audio-status">*Áudio gerado automaticamente em inglês (Text-to-Speech).</p>
+                    </div>
+
+                    <h3 class="font-bold text-lg text-brand-terracotta mb-4">Listen and answer:</h3>
+                    <div class="grid md:grid-cols-2 gap-4 text-gray-700 mb-6">
+                        <div>1. Where was the person? <input type="text" name="Listening_Q1" class="fill-line w-full mt-1 user-input" data-answer="at the beach|beach|she was at the beach"></div>
+                        <div>2. How was the weather? <input type="text" name="Listening_Q2" class="fill-line w-full mt-1 user-input" data-answer="sunny and warm|sunny|warm|it was sunny and warm"></div>
+                        <div>3. Who was happy and relaxed? <input type="text" name="Listening_Q3" class="fill-line w-full mt-1 user-input" data-answer="her parents|parents|the parents"></div>
+                        <div>4. Was the beach empty? <input type="text" name="Listening_Q4" class="fill-line w-full mt-1 user-input" data-answer="no|no it wasn't|no it was crowded|crowded"></div>
+                        <div>5. Where were they at night? <input type="text" name="Listening_Q5" class="fill-line w-full mt-1 user-input" data-answer="at a restaurant|restaurant|at a restaurant near the beach"></div>
+                        <div>6. How was the food? <input type="text" name="Listening_Q6" class="fill-line w-full mt-1 user-input" data-answer="excellent|it was excellent|good"></div>
+                        <div class="md:col-span-2">7. Were they tired or excited? <input type="text" name="Listening_Q7" class="fill-line w-full max-w-none mt-1 user-input" data-answer="very tired|tired|they were tired|they were very tired"></div>
+                    </div>
+
+                    <button onclick="checkAnswers('listening-container')" class="mb-4 bg-brand-darkblue text-white px-6 py-2 rounded-full hover:bg-brand-champagne transition-colors shadow-sm font-medium text-sm">
+                        ✓ Verificar Escuta
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABA: Speaking -->
+        <section id="speaking" class="tab-content">
+            <div class="bg-brand-darkblue text-white rounded-xl shadow-lg p-8 relative overflow-hidden">
+                <div class="absolute right-[-20px] top-[-20px] opacity-10 text-[150px]">🗣️</div>
+                <h2 class="font-serif text-3xl text-brand-champagnelight mb-2 relative z-10 flex items-center gap-3">
+                    Speaking Practice
+                </h2>
+                <p class="text-brand-lightblue font-light mb-8 relative z-10 border-b border-white/20 pb-4">
+                    Escute a pergunta, grave a sua resposta em voz alta. Depois, acesse a aba "Envio" para submeter a atividade.
+                </p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 relative z-10">
+                    <!-- Q1 -->
+                    <div class="bg-white/5 p-5 rounded-lg border border-white/10 hover:border-brand-champagne/50 transition-colors">
+                        <span class="text-brand-champagnelight text-sm font-bold block mb-2">Q1</span>
+                        <p class="font-serif text-lg mb-4 h-14">Where were you yesterday morning?</p>
+                        <div class="flex flex-wrap gap-3 mb-3">
+                            <button onclick="speakQuestion('Where were you yesterday morning?')" class="bg-brand-lightblue/20 text-white p-2 rounded-full hover:bg-brand-champagne transition flex items-center gap-2 text-sm px-4" title="Ouvir Pergunta">
+                                🔊 Ouvir
+                            </button>
+                            <button onclick="toggleRecord('q1')" id="btn-rec-q1" class="bg-brand-terracotta text-white p-2 rounded-full hover:bg-red-700 transition flex items-center gap-2 text-sm px-4 shadow-md" title="Gravar Resposta">
+                                🎙️ Gravar
+                            </button>
+                        </div>
+                        <div id="audio-res-q1" class="hidden flex-col gap-2 bg-black/20 p-3 rounded mt-2">
+                            <span class="text-xs text-green-400 font-semibold uppercase tracking-wider">✓ Áudio Gravado</span>
+                            <audio id="player-q1" controls class="w-full h-8"></audio>
+                        </div>
+                    </div>
+
+                    <!-- Q2 -->
+                    <div class="bg-white/5 p-5 rounded-lg border border-white/10 hover:border-brand-champagne/50 transition-colors">
+                        <span class="text-brand-champagnelight text-sm font-bold block mb-2">Q2</span>
+                        <p class="font-serif text-lg mb-4 h-14">Were you at home last night?</p>
+                        <div class="flex flex-wrap gap-3 mb-3">
+                            <button onclick="speakQuestion('Were you at home last night?')" class="bg-brand-lightblue/20 text-white p-2 rounded-full hover:bg-brand-champagne transition flex items-center gap-2 text-sm px-4" title="Ouvir Pergunta">
+                                🔊 Ouvir
+                            </button>
+                            <button onclick="toggleRecord('q2')" id="btn-rec-q2" class="bg-brand-terracotta text-white p-2 rounded-full hover:bg-red-700 transition flex items-center gap-2 text-sm px-4 shadow-md" title="Gravar Resposta">
+                                🎙️ Gravar
+                            </button>
+                        </div>
+                        <div id="audio-res-q2" class="hidden flex-col gap-2 bg-black/20 p-3 rounded mt-2">
+                            <span class="text-xs text-green-400 font-semibold uppercase tracking-wider">✓ Áudio Gravado</span>
+                            <audio id="player-q2" controls class="w-full h-8"></audio>
+                        </div>
+                    </div>
+
+                    <!-- Q3 -->
+                    <div class="bg-white/5 p-5 rounded-lg border border-white/10 hover:border-brand-champagne/50 transition-colors">
+                        <span class="text-brand-champagnelight text-sm font-bold block mb-2">Q3</span>
+                        <p class="font-serif text-lg mb-4 h-14">Who was your favorite teacher last year?</p>
+                        <div class="flex flex-wrap gap-3 mb-3">
+                            <button onclick="speakQuestion('Who was your favorite teacher last year?')" class="bg-brand-lightblue/20 text-white p-2 rounded-full hover:bg-brand-champagne transition flex items-center gap-2 text-sm px-4" title="Ouvir Pergunta">
+                                🔊 Ouvir
+                            </button>
+                            <button onclick="toggleRecord('q3')" id="btn-rec-q3" class="bg-brand-terracotta text-white p-2 rounded-full hover:bg-red-700 transition flex items-center gap-2 text-sm px-4 shadow-md" title="Gravar Resposta">
+                                🎙️ Gravar
+                            </button>
+                        </div>
+                        <div id="audio-res-q3" class="hidden flex-col gap-2 bg-black/20 p-3 rounded mt-2">
+                            <span class="text-xs text-green-400 font-semibold uppercase tracking-wider">✓ Áudio Gravado</span>
+                            <audio id="player-q3" controls class="w-full h-8"></audio>
+                        </div>
+                    </div>
+
+                    <!-- Q4 -->
+                    <div class="bg-white/5 p-5 rounded-lg border border-white/10 hover:border-brand-champagne/50 transition-colors">
+                        <span class="text-brand-champagnelight text-sm font-bold block mb-2">Q4</span>
+                        <p class="font-serif text-lg mb-4 h-14">How was your last weekend?</p>
+                        <div class="flex flex-wrap gap-3 mb-3">
+                            <button onclick="speakQuestion('How was your last weekend?')" class="bg-brand-lightblue/20 text-white p-2 rounded-full hover:bg-brand-champagne transition flex items-center gap-2 text-sm px-4" title="Ouvir Pergunta">
+                                🔊 Ouvir
+                            </button>
+                            <button onclick="toggleRecord('q4')" id="btn-rec-q4" class="bg-brand-terracotta text-white p-2 rounded-full hover:bg-red-700 transition flex items-center gap-2 text-sm px-4 shadow-md" title="Gravar Resposta">
+                                🎙️ Gravar
+                            </button>
+                        </div>
+                        <div id="audio-res-q4" class="hidden flex-col gap-2 bg-black/20 p-3 rounded mt-2">
+                            <span class="text-xs text-green-400 font-semibold uppercase tracking-wider">✓ Áudio Gravado</span>
+                            <audio id="player-q4" controls class="w-full h-8"></audio>
+                        </div>
+                    </div>
+
+                    <!-- Q5 -->
+                    <div class="bg-white/5 p-5 rounded-lg border border-white/10 hover:border-brand-champagne/50 transition-colors">
+                        <span class="text-brand-champagnelight text-sm font-bold block mb-2">Q5</span>
+                        <p class="font-serif text-lg mb-4 h-14">Were you tired after your last class?</p>
+                        <div class="flex flex-wrap gap-3 mb-3">
+                            <button onclick="speakQuestion('Were you tired after your last class?')" class="bg-brand-lightblue/20 text-white p-2 rounded-full hover:bg-brand-champagne transition flex items-center gap-2 text-sm px-4" title="Ouvir Pergunta">
+                                🔊 Ouvir
+                            </button>
+                            <button onclick="toggleRecord('q5')" id="btn-rec-q5" class="bg-brand-terracotta text-white p-2 rounded-full hover:bg-red-700 transition flex items-center gap-2 text-sm px-4 shadow-md" title="Gravar Resposta">
+                                🎙️ Gravar
+                            </button>
+                        </div>
+                        <div id="audio-res-q5" class="hidden flex-col gap-2 bg-black/20 p-3 rounded mt-2">
+                            <span class="text-xs text-green-400 font-semibold uppercase tracking-wider">✓ Áudio Gravado</span>
+                            <audio id="player-q5" controls class="w-full h-8"></audio>
+                        </div>
+                    </div>
+                    
+                    <!-- Q6 -->
+                    <div class="bg-white/5 p-5 rounded-lg border border-white/10 hover:border-brand-champagne/50 transition-colors">
+                        <span class="text-brand-champagnelight text-sm font-bold block mb-2">Q6</span>
+                        <p class="font-serif text-lg mb-4 h-14">Where were you on your last vacation?</p>
+                        <div class="flex flex-wrap gap-3 mb-3">
+                            <button onclick="speakQuestion('Where were you on your last vacation?')" class="bg-brand-lightblue/20 text-white p-2 rounded-full hover:bg-brand-champagne transition flex items-center gap-2 text-sm px-4" title="Ouvir Pergunta">
+                                🔊 Ouvir
+                            </button>
+                            <button onclick="toggleRecord('q6')" id="btn-rec-q6" class="bg-brand-terracotta text-white p-2 rounded-full hover:bg-red-700 transition flex items-center gap-2 text-sm px-4 shadow-md" title="Gravar Resposta">
+                                🎙️ Gravar
+                            </button>
+                        </div>
+                        <div id="audio-res-q6" class="hidden flex-col gap-2 bg-black/20 p-3 rounded mt-2">
+                            <span class="text-xs text-green-400 font-semibold uppercase tracking-wider">✓ Áudio Gravado</span>
+                            <audio id="player-q6" controls class="w-full h-8"></audio>
+                        </div>
+                    </div>
+
+                    <!-- Q7 -->
+                    <div class="bg-white/5 p-5 rounded-lg border border-white/10 hover:border-brand-champagne/50 transition-colors">
+                        <span class="text-brand-champagnelight text-sm font-bold block mb-2">Q7</span>
+                        <p class="font-serif text-lg mb-4 h-14">Was your last meal good?</p>
+                        <div class="flex flex-wrap gap-3 mb-3">
+                            <button onclick="speakQuestion('Was your last meal good?')" class="bg-brand-lightblue/20 text-white p-2 rounded-full hover:bg-brand-champagne transition flex items-center gap-2 text-sm px-4" title="Ouvir Pergunta">
+                                🔊 Ouvir
+                            </button>
+                            <button onclick="toggleRecord('q7')" id="btn-rec-q7" class="bg-brand-terracotta text-white p-2 rounded-full hover:bg-red-700 transition flex items-center gap-2 text-sm px-4 shadow-md" title="Gravar Resposta">
+                                🎙️ Gravar
+                            </button>
+                        </div>
+                        <div id="audio-res-q7" class="hidden flex-col gap-2 bg-black/20 p-3 rounded mt-2">
+                            <span class="text-xs text-green-400 font-semibold uppercase tracking-wider">✓ Áudio Gravado</span>
+                            <audio id="player-q7" controls class="w-full h-8"></audio>
+                        </div>
+                    </div>
+
+                    <!-- Q8 -->
+                    <div class="bg-white/5 p-5 rounded-lg border border-white/10 hover:border-brand-champagne/50 transition-colors">
+                        <span class="text-brand-champagnelight text-sm font-bold block mb-2">Q8</span>
+                        <p class="font-serif text-lg mb-4 h-14">Were your friends with you yesterday?</p>
+                        <div class="flex flex-wrap gap-3 mb-3">
+                            <button onclick="speakQuestion('Were your friends with you yesterday?')" class="bg-brand-lightblue/20 text-white p-2 rounded-full hover:bg-brand-champagne transition flex items-center gap-2 text-sm px-4" title="Ouvir Pergunta">
+                                🔊 Ouvir
+                            </button>
+                            <button onclick="toggleRecord('q8')" id="btn-rec-q8" class="bg-brand-terracotta text-white p-2 rounded-full hover:bg-red-700 transition flex items-center gap-2 text-sm px-4 shadow-md" title="Gravar Resposta">
+                                🎙️ Gravar
+                            </button>
+                        </div>
+                        <div id="audio-res-q8" class="hidden flex-col gap-2 bg-black/20 p-3 rounded mt-2">
+                            <span class="text-xs text-green-400 font-semibold uppercase tracking-wider">✓ Áudio Gravado</span>
+                            <audio id="player-q8" controls class="w-full h-8"></audio>
+                        </div>
+                    </div>
+
+                    <!-- Q9 -->
+                    <div class="bg-white/5 p-5 rounded-lg border border-white/10 hover:border-brand-champagne/50 transition-colors">
+                        <span class="text-brand-champagnelight text-sm font-bold block mb-2">Q9</span>
+                        <p class="font-serif text-lg mb-4 h-14">How was the weather yesterday?</p>
+                        <div class="flex flex-wrap gap-3 mb-3">
+                            <button onclick="speakQuestion('How was the weather yesterday?')" class="bg-brand-lightblue/20 text-white p-2 rounded-full hover:bg-brand-champagne transition flex items-center gap-2 text-sm px-4" title="Ouvir Pergunta">
+                                🔊 Ouvir
+                            </button>
+                            <button onclick="toggleRecord('q9')" id="btn-rec-q9" class="bg-brand-terracotta text-white p-2 rounded-full hover:bg-red-700 transition flex items-center gap-2 text-sm px-4 shadow-md" title="Gravar Resposta">
+                                🎙️ Gravar
+                            </button>
+                        </div>
+                        <div id="audio-res-q9" class="hidden flex-col gap-2 bg-black/20 p-3 rounded mt-2">
+                            <span class="text-xs text-green-400 font-semibold uppercase tracking-wider">✓ Áudio Gravado</span>
+                            <audio id="player-q9" controls class="w-full h-8"></audio>
+                        </div>
+                    </div>
+
+                    <!-- Q10 -->
+                    <div class="bg-white/5 p-5 rounded-lg border border-white/10 hover:border-brand-champagne/50 transition-colors">
+                        <span class="text-brand-champagnelight text-sm font-bold block mb-2">Q10</span>
+                        <p class="font-serif text-lg mb-4 h-14">Were you busy last week?</p>
+                        <div class="flex flex-wrap gap-3 mb-3">
+                            <button onclick="speakQuestion('Were you busy last week?')" class="bg-brand-lightblue/20 text-white p-2 rounded-full hover:bg-brand-champagne transition flex items-center gap-2 text-sm px-4" title="Ouvir Pergunta">
+                                🔊 Ouvir
+                            </button>
+                            <button onclick="toggleRecord('q10')" id="btn-rec-q10" class="bg-brand-terracotta text-white p-2 rounded-full hover:bg-red-700 transition flex items-center gap-2 text-sm px-4 shadow-md" title="Gravar Resposta">
+                                🎙️ Gravar
+                            </button>
+                        </div>
+                        <div id="audio-res-q10" class="hidden flex-col gap-2 bg-black/20 p-3 rounded mt-2">
+                            <span class="text-xs text-green-400 font-semibold uppercase tracking-wider">✓ Áudio Gravado</span>
+                            <audio id="player-q10" controls class="w-full h-8"></audio>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NOVA ABA: ENVIO -->
+        <section id="submit" class="tab-content">
+            <div class="space-y-8">
+                <div class="bg-white text-brand-darkblue rounded-xl p-8 relative z-10 shadow-lg border-t-4 border-brand-champagne">
+                    <h2 class="font-serif text-3xl font-bold mb-6 flex items-center gap-3 justify-center">
+                        <span class="text-brand-champagne">📤</span> Enviar Atividade Completa
+                    </h2>
+                    <p class="text-gray-600 mb-8 text-center text-lg">Este painel recolhe os seus textos preenchidos em todas as abas e os áudios gravados, enviando-os diretamente para a professora.</p>
+                    
+                    <div class="max-w-md mx-auto space-y-6 mb-8 bg-brand-offwhite p-6 rounded-xl border border-gray-200">
+                        <div>
+                            <label class="block text-sm font-semibold text-brand-darkblue mb-2">Nome Completo</label>
+                            <input type="text" id="studentName" class="w-full border-2 border-brand-lightblue rounded-lg p-3 focus:outline-none focus:border-brand-champagne bg-white" placeholder="O seu nome">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-brand-darkblue mb-2">Email</label>
+                            <input type="email" id="studentEmail" class="w-full border-2 border-brand-lightblue rounded-lg p-3 focus:outline-none focus:border-brand-champagne bg-white" placeholder="O seu email principal">
+                        </div>
+                    </div>
+
+                    <div class="flex justify-center">
+                        <button onclick="submitToDrive()" id="submitDriveBtn" class="bg-brand-darkblue text-white px-8 py-4 rounded-full hover:bg-brand-champagne transition-colors shadow-md font-semibold text-lg flex items-center gap-2 w-full sm:w-auto justify-center">
+                            🚀 Enviar Respostas e Áudios
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Botão Flutuante de Modo Edição -->
+    <button onclick="toggleEditMode()" id="btn-edit-floating" class="fixed bottom-6 right-6 md:bottom-10 md:right-10 bg-white border-2 border-brand-terracotta text-brand-terracotta px-5 py-3 rounded-full shadow-2xl hover:bg-brand-terracotta hover:text-white transition-all z-50 flex items-center gap-2 font-bold cursor-pointer text-sm md:text-base group">
+        <span id="edit-icon">🛠️</span>
+        <span id="edit-text">Modo Edição</span>
+    </button>
+
+    <!-- Scripts -->
+    <script>
+        // Função para alternar as abas
+        function openTab(tabName) {
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(button => {
+                button.classList.remove('text-brand-darkblue', 'border-brand-darkblue', 'bg-brand-offwhite');
+                button.classList.add('text-gray-500', 'border-transparent');
+            });
+
+            document.getElementById(tabName).classList.add('active');
+
+            const activeBtn = document.getElementById('btn-' + tabName);
+            activeBtn.classList.remove('text-gray-500', 'border-transparent');
+            activeBtn.classList.add('text-brand-darkblue', 'border-brand-darkblue', 'bg-brand-offwhite');
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            openTab('home');
+        });
+
+        // Função de Correção Automática Visual
+        function checkAnswers(containerId) {
+            const container = document.getElementById(containerId);
+            const inputs = container.querySelectorAll('input[type="text"]');
+            
+            inputs.forEach(input => {
+                const answerString = input.getAttribute('data-answer');
+                if (!answerString) return;
+
+                input.classList.remove('correct-answer', 'incorrect-answer');
+
+                let userVal = input.value.trim().toLowerCase().replace(/[.,!?]$/, '');
+                userVal = userVal.replace(/['`´]/g, "'");
+
+                if (userVal === "") return; 
+
+                const validAnswers = answerString.split('|').map(a => a.trim().toLowerCase());
+
+                if (validAnswers.includes(userVal)) {
+                    input.classList.add('correct-answer');
+                } else {
+                    input.classList.add('incorrect-answer');
+                }
+            });
+
+            if (containerId === 'practice-container') {
+                const msg = document.getElementById('practice-msg');
+                if (msg) msg.classList.remove('hidden');
+            }
+        }
+
+        // TTS - Leitura Automática
+        const audioScriptText = "Yesterday was a great day. I was at the beach with my family. The weather was sunny and warm. My parents were happy and relaxed. My brother was in the water all afternoon. The beach was crowded, but it was very beautiful. At night, we were at a restaurant near the beach. The food was excellent, and we were very tired when we got home.";
+        let synth = window.speechSynthesis;
+        let utterance = new SpeechSynthesisUtterance(audioScriptText);
+        utterance.lang = 'en-US'; 
+        utterance.rate = 0.85; 
+
+        let voices = [];
+        function loadVoices() { voices = synth.getVoices(); }
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = loadVoices;
+        }
+
+        function playAudioText() {
+            if (synth.speaking) synth.cancel();
+            
+            const englishVoice = voices.find(voice => voice.lang.includes('en-US') && (voice.name.includes('Google') || voice.name.includes('Samantha') || voice.name.includes('Natural') || voice.name.includes('Female')));
+            if (englishVoice) utterance.voice = englishVoice;
+
+            synth.speak(utterance);
+            
+            document.getElementById('playAudioBtn').classList.add('hidden');
+            document.getElementById('stopAudioBtn').classList.remove('hidden');
+            document.getElementById('audio-status').innerText = "A reproduzir áudio...";
+            document.getElementById('audio-status').classList.add('text-brand-champagne', 'font-semibold');
+            
+            utterance.onend = resetAudioUI;
+            utterance.onerror = resetAudioUI;
+        }
+
+        function stopAudioText() {
+            synth.cancel();
+            resetAudioUI();
+        }
+
+        function resetAudioUI() {
+            document.getElementById('playAudioBtn').classList.remove('hidden');
+            document.getElementById('stopAudioBtn').classList.add('hidden');
+            document.getElementById('audio-status').innerText = "*Áudio gerado automaticamente em inglês (Text-to-Speech).";
+            document.getElementById('audio-status').classList.remove('text-brand-champagne', 'font-semibold');
+        }
+
+        function speakQuestion(text) {
+            if (synth.speaking) synth.cancel();
+            let utteranceQ = new SpeechSynthesisUtterance(text);
+            utteranceQ.lang = 'en-US';
+            utteranceQ.rate = 0.85;
+            const englishVoice = voices.find(voice => voice.lang.includes('en-US') && (voice.name.includes('Google') || voice.name.includes('Samantha') || voice.name.includes('Female')));
+            if (englishVoice) utteranceQ.voice = englishVoice;
+            synth.speak(utteranceQ);
+        }
+
+        // Gravador de Voz com conversão para Base64 (Para enviar por API)
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let currentActiveQuestionId = null;
+        
+        let base64AudiosStore = {};
+
+        async function toggleRecord(qId) {
+            const btn = document.getElementById(`btn-rec-${qId}`);
+            
+            if (mediaRecorder && mediaRecorder.state === "recording") {
+                if (currentActiveQuestionId === qId) {
+                    mediaRecorder.stop();
+                    return;
+                } else {
+                    alert("Por favor, pare a gravação atual antes de iniciar uma nova.");
+                    return;
+                }
+            }
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+                currentActiveQuestionId = qId;
+
+                mediaRecorder.ondataavailable = e => {
+                    if (e.data.size > 0) audioChunks.push(e.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    
+                    const player = document.getElementById(`player-${qId}`);
+                    const resContainer = document.getElementById(`audio-res-${qId}`);
+                    
+                    player.src = audioUrl;
+                    resContainer.classList.remove('hidden');
+
+                    btn.innerHTML = "🎙️ Gravar Novamente";
+                    btn.classList.remove('animate-pulse', 'bg-red-600');
+                    btn.classList.add('bg-brand-terracotta');
+
+                    const reader = new FileReader();
+                    reader.readAsDataURL(audioBlob);
+                    reader.onloadend = () => {
+                        base64AudiosStore[qId] = reader.result.split(',')[1];
+                    };
+
+                    stream.getTracks().forEach(track => track.stop());
+                    mediaRecorder = null;
+                    currentActiveQuestionId = null;
+                };
+
+                mediaRecorder.start();
+                
+                btn.innerHTML = "⏹️ Parar Gravação";
+                btn.classList.remove('bg-brand-terracotta');
+                btn.classList.add('animate-pulse', 'bg-red-600');
+                
+            } catch (err) {
+                console.error("Erro ao acessar microfone:", err);
+                alert("Não foi possível aceder ao microfone. Verifique se o seu navegador tem permissão para usar o microfone deste dispositivo.");
+            }
+        }
+
+        // ==========================================
+        // Integração com Google App Script (Drive/Sheets)
+        // ==========================================
+        function submitToDrive() {
+            const btn = document.getElementById('submitDriveBtn');
+            const name = document.getElementById('studentName').value.trim();
+            const email = document.getElementById('studentEmail').value.trim();
+            
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbyd7zseF2n3ZffxSUvfZmMzXOJD8oAliBvHnoC0GAsZP9RuB7dIuWP7rfObmR9nw1k0/exec';
+
+            if (!name || !email) {
+                alert("Por favor, preencha o seu Nome Completo e Email antes de enviar.");
+                return;
+            }
+
+            btn.innerHTML = "A Enviar... (Pode demorar uns segundos) ⏳";
+            btn.classList.remove('hover:bg-brand-champagne');
+            btn.classList.add('opacity-80', 'cursor-not-allowed');
+            btn.disabled = true;
+
+            let textAnswers = {};
+            document.querySelectorAll('.user-input').forEach(input => {
+                if(input.name) {
+                    textAnswers[input.name] = input.value;
+                }
+            });
+
+            const payload = {
+                studentName: name,
+                studentEmail: email,
+                textAnswers: textAnswers,
+                audios: base64AudiosStore
+            };
+
+            fetch(scriptURL, {
+                method: 'POST',
+                mode: 'no-cors', 
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8' 
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(() => {
+                btn.innerHTML = "✅ Respostas Enviadas com Sucesso!";
+                btn.classList.replace('bg-brand-darkblue', 'bg-green-600');
+                btn.classList.remove('cursor-not-allowed');
+                alert(`Excelente trabalho, ${name}! As suas respostas e áudios foram submetidos para a mentora.`);
+            })
+            .catch(error => {
+                console.error('Erro no envio:', error);
+                btn.innerHTML = "❌ Erro ao enviar. Tente Novamente";
+                btn.disabled = false;
+                btn.classList.remove('opacity-80', 'cursor-not-allowed');
+                btn.classList.add('hover:bg-brand-champagne');
+                alert("Houve um problema de conexão. Por favor, tente enviar novamente.");
+            });
+        }
+
+        // ==========================================
+        // Modo de Edição de Conteúdo (Mentor Mode)
+        // ==========================================
+        let isEditing = false;
+        function toggleEditMode() {
+            isEditing = !isEditing;
+            const editBtn = document.getElementById('btn-edit-floating');
+            const editIcon = document.getElementById('edit-icon');
+            const editText = document.getElementById('edit-text');
+            const mainContent = document.querySelector('main');
+            const headerContent = document.querySelector('header');
+
+            if (isEditing) {
+                // Ativar edição nas áreas de texto
+                mainContent.contentEditable = "true";
+                headerContent.contentEditable = "true";
+                
+                // Proteger elementos interativos para não quebrar a página
+                const interactives = document.querySelectorAll('button:not(#btn-edit-floating), input, audio, a, summary, details, .fill-blank, .fill-line');
+                interactives.forEach(el => el.contentEditable = "false");
+
+                // Atualizar botão
+                editBtn.classList.replace('border-brand-terracotta', 'border-green-600');
+                editBtn.classList.replace('text-brand-terracotta', 'text-green-600');
+                editBtn.classList.replace('hover:bg-brand-terracotta', 'hover:bg-green-600');
+                editIcon.innerHTML = "💾";
+                editText.innerHTML = "Concluir Edição";
+            } else {
+                // Desativar edição
+                mainContent.contentEditable = "false";
+                headerContent.contentEditable = "false";
+                
+                // Atualizar botão
+                editBtn.classList.replace('border-green-600', 'border-brand-terracotta');
+                editBtn.classList.replace('text-green-600', 'text-brand-terracotta');
+                editBtn.classList.replace('hover:bg-green-600', 'hover:bg-brand-terracotta');
+                editIcon.innerHTML = "🛠️";
+                editText.innerHTML = "Modo Edição";
+            }
+        }
+    </script>
+</body>
+</html>
