@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
@@ -77,18 +77,6 @@
         .incorrect-answer {
             border-bottom-color: #a61e00 !important; /* Terracota da sua marca */
             color: #a61e00 !important;
-        }
-
-        /* Estilo para o Modo de Edição */
-        [contenteditable="true"] {
-            outline: 2px dashed #a8c4dc;
-            outline-offset: 4px;
-            border-radius: 4px;
-            transition: outline 0.2s;
-        }
-        [contenteditable="true"]:focus {
-            outline: 2px solid #b88a4d;
-            background-color: rgba(255, 251, 246, 0.8);
         }
     </style>
 </head>
@@ -647,20 +635,6 @@
 
     </main>
 
-    <!-- Botão Flutuante de Exportar (Aparece apenas no Modo Edição) -->
-    <div class="fixed bottom-6 right-6 md:bottom-10 md:right-10 flex flex-col gap-3 z-50 items-end">
-        <button onclick="exportHTML()" id="btn-export-floating" class="hidden bg-brand-darkblue border-2 border-brand-darkblue text-white px-5 py-3 rounded-full shadow-2xl hover:bg-brand-champagne hover:border-brand-champagne transition-all items-center gap-2 font-bold cursor-pointer text-sm md:text-base group">
-            <span>📥</span>
-            <span>Baixar Site Atualizado</span>
-        </button>
-
-        <!-- Botão Flutuante de Modo Edição -->
-        <button onclick="toggleEditMode()" id="btn-edit-floating" class="bg-white border-2 border-brand-terracotta text-brand-terracotta px-5 py-3 rounded-full shadow-2xl hover:bg-brand-terracotta hover:text-white transition-all flex items-center gap-2 font-bold cursor-pointer text-sm md:text-base group">
-            <span id="edit-icon">🛠️</span>
-            <span id="edit-text">Modo Edição</span>
-        </button>
-    </div>
-
     <!-- Scripts -->
     <script>
         // Função para alternar as abas
@@ -684,13 +658,6 @@
         }
 
         document.addEventListener("DOMContentLoaded", () => {
-            // Restaurar edições salvas localmente
-            const savedHeader = localStorage.getItem('trilha_fluencia_header');
-            const savedMain = localStorage.getItem('trilha_fluencia_main');
-            
-            if (savedHeader) document.querySelector('header').innerHTML = savedHeader;
-            if (savedMain) document.querySelector('main').innerHTML = savedMain;
-
             openTab('home');
         });
 
@@ -900,91 +867,6 @@
                 btn.classList.add('hover:bg-brand-champagne');
                 alert("Houve um problema de conexão. Por favor, tente enviar novamente.");
             });
-        }
-
-        // ==========================================
-        // Modo de Edição de Conteúdo (Mentor Mode)
-        // ==========================================
-        let isEditing = false;
-        function toggleEditMode() {
-            isEditing = !isEditing;
-            const editBtn = document.getElementById('btn-edit-floating');
-            const editIcon = document.getElementById('edit-icon');
-            const editText = document.getElementById('edit-text');
-            const exportBtn = document.getElementById('btn-export-floating');
-            const mainContent = document.querySelector('main');
-            const headerContent = document.querySelector('header');
-
-            if (isEditing) {
-                // Ativar edição nas áreas de texto
-                mainContent.contentEditable = "true";
-                headerContent.contentEditable = "true";
-                
-                // Proteger elementos interativos para não quebrar a página
-                const interactives = document.querySelectorAll('button, input, audio, a, summary, details, .fill-blank, .fill-line');
-                interactives.forEach(el => el.contentEditable = "false");
-
-                // Atualizar botão de Edição
-                editBtn.classList.replace('border-brand-terracotta', 'border-green-600');
-                editBtn.classList.replace('text-brand-terracotta', 'text-green-600');
-                editBtn.classList.replace('hover:bg-brand-terracotta', 'hover:bg-green-600');
-                editIcon.innerHTML = "💾";
-                editText.innerHTML = "Concluir Edição";
-                
-                // Mostrar Botão de Exportar
-                exportBtn.classList.remove('hidden');
-                exportBtn.classList.add('flex');
-            } else {
-                // Desativar edição
-                mainContent.contentEditable = "false";
-                headerContent.contentEditable = "false";
-                
-                // Guardar no LocalStorage para não perder alterações ao recarregar a prévia
-                localStorage.setItem('trilha_fluencia_header', headerContent.innerHTML);
-                localStorage.setItem('trilha_fluencia_main', mainContent.innerHTML);
-                
-                // Atualizar botão de Edição
-                editBtn.classList.replace('border-green-600', 'border-brand-terracotta');
-                editBtn.classList.replace('text-green-600', 'text-brand-terracotta');
-                editBtn.classList.replace('hover:bg-green-600', 'hover:bg-brand-terracotta');
-                editIcon.innerHTML = "🛠️";
-                editText.innerHTML = "Modo Edição";
-                
-                // Esconder Botão de Exportar
-                exportBtn.classList.add('hidden');
-                exportBtn.classList.remove('flex');
-            }
-        }
-        
-        // ==========================================
-        // Exportar o ficheiro Editado para GitHub
-        // ==========================================
-        function exportHTML() {
-            // Desativar temporariamente o modo de edição para não exportar as caixas tracejadas
-            const wasEditing = isEditing;
-            if (wasEditing) toggleEditMode(); 
-            
-            // Limpar do localStorage para o utilizador final ter uma página "limpa"
-            const contentClone = document.documentElement.cloneNode(true);
-            const mainInClone = contentClone.querySelector('main');
-            const headerInClone = contentClone.querySelector('header');
-            
-            // Fazer um clone limpo do documento todo
-            const htmlContent = "<!DOCTYPE html>\n" + contentClone.outerHTML;
-            
-            // Criar e iniciar o Download
-            const blob = new Blob([htmlContent], {type: "text/html;charset=utf-8"});
-            const a = document.createElement("a");
-            a.href = URL.createObjectURL(blob);
-            a.download = "index.html"; // O nome ideal para o GitHub
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            
-            // Reativar a edição
-            if (wasEditing) toggleEditMode();
-            
-            alert("Sucesso! O ficheiro index.html atualizado foi transferido para as suas transferências (downloads). Agora só precisa de fazer o upload para o seu GitHub.");
         }
     </script>
 </body>
